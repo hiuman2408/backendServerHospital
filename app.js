@@ -1,12 +1,18 @@
 //REQUIRES 
 var express = require('express');
-
-
 var mongoose = require('mongoose');
+
+var bodyParser = require('body-parser')
 
 //INICIALIZAR VARIABLE
 
 const app = express();
+
+//importar rutas
+
+var appRoutes = require('./routes/app')
+var usuarioRoutes = require('./routes/usuario')
+var loginRoutes = require('./routes/login')
 
 //CONEXION A LA BASE DE DATOS
 
@@ -29,22 +35,26 @@ db.once('open', function() {
 */
 
 
-//RUTAS (RESIVE COLLBACK)
+//BODY-PARSER
 
-app.get('/', (req, res,next) => {
-   
-    res.status(200).json({
-        ok:true,
-        mensaje:'Peticion relizada correctamente status200'
-    })
-    
-});
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
+// parse application/json
+app.use(bodyParser.json())
+
+
+
+//RUTAS (RESIVE COLLBACK) midelwer
+
+app.use('/usuario',usuarioRoutes)
+app.use('/login',loginRoutes)
+app.use('/',appRoutes)
 
 // ESCUHCAR PETICIONES
 
 app.listen(3000, () => {
-    console.log('el servidor corriendo  en el puerto 3000!');
+    console.log('el servidor corriendo  en el puerto ll 3000!');
 });
 
 //Run app, then load http://localhost:port in a browser to see the output.
