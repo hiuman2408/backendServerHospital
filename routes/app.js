@@ -7,7 +7,7 @@ app.get('/', (req, res,next) => {
    
     res.status(200).json({
         ok:true,
-        mensaje:'Peticion relizada correctamente status  gfhff200'
+        mensaje:'Peticion relizada correctamente status  200'
     })
     
 });

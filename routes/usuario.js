@@ -25,22 +25,35 @@ var Usuario = require('../models/usuario')
 
 app.get('/', (req, res,next) => {
 
+    var desde = req.query.desde || 0; //parametro opcional por la URl
+        desde = Number(desde);
+
+
     Usuario.find({},'nombre email image role')
-    .exec(
-        (err,usuarios)=>{
+          .skip(desde)  //desde que indice 
+          .limit(5)   //cuantos registros a mostrar
+           .exec(
+                (err,usuarios)=>{
 
-        if(err){
-            return res.status(500).json({
-                ok:false,
-                mensaje:'Error cargando usuario (Base de datos)',
-                errors:err
-            }) 
-        }
+                if(err){
+                    return res.status(500).json({
+                        ok:false,
+                        mensaje:'Error cargando usuario (Base de datos)',
+                        errors:err
+                    }) 
+            }
 
-        res.status(200).json({
-            ok:true,
-            usuarios:usuarios
-        })
+            Usuario.count({}, (err, totalUsuarios) => {
+
+                    res.status(200).json({
+                        ok: true,
+                        usuariosAll: usuarios,
+                        totalUsuarios: totalUsuarios
+                    });
+            })
+
+
+        
         
     })
    

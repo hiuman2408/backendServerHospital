@@ -13,6 +13,11 @@ const app = express();
 var appRoutes = require('./routes/app')
 var usuarioRoutes = require('./routes/usuario')
 var loginRoutes = require('./routes/login')
+var hospitalRoutes = require('./routes/hospital');
+var medicoRoutes = require('./routes/medico');
+var busquedaRoutes = require('./routes/busqueda');
+var uploadRoutes = require('./routes/upload');
+var imagenesRoutes = require('./routes/imagenes');
 
 //CONEXION A LA BASE DE DATOS
 
@@ -49,6 +54,11 @@ app.use(bodyParser.json())
 
 app.use('/usuario',usuarioRoutes)
 app.use('/login',loginRoutes)
+app.use('/hospital',hospitalRoutes)
+app.use('/medico',medicoRoutes)
+app.use('/busqueda',busquedaRoutes)
+app.use('/upload',uploadRoutes)
+app.use('/imagen',imagenesRoutes)
 app.use('/',appRoutes)
 
 // ESCUHCAR PETICIONES
