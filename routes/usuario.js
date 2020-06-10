@@ -156,6 +156,7 @@ app.post('/',mdlAutenticacion.verificaToken,(req,res)=>{
 
 //ELIMINAR USUARIO
 app.delete('/:id',mdlAutenticacion.verificaToken,(req,res)=>{
+    
     var id= req.params.id;
     Usuario.findByIdAndRemove(id,(err,usuarioBorrado)=>{
 
