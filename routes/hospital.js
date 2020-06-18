@@ -39,8 +39,41 @@ app.get('/', (req, res,next) => {
 
                     res.status(200).json({
                         ok: true,
-                        hospitalAll: hospital,
-                        totalHospitales: totalHospitales
+                        hospitales: hospital,
+                        total: totalHospitales
+                    });
+                })
+                
+            })
+    
+   
+    
+});
+
+//OBTENER TODOS LOS HOSPITALES PARA EL SELECT
+
+
+app.get('/select', (req, res,next) => {
+
+  
+    Hospital.find({},'nombre image usuario').populate('usuario','nombre email')//populate para mostar las referencias 
+            .exec(
+                (err,hospital)=>{
+
+                if(err){
+                    return res.status(500).json({
+                        ok:false,
+                        mensaje:'Error cargando usuario (Base de datos)',
+                        errors:err
+                    }) 
+                }
+
+                Hospital.count({}, (err, totalHospitales) => {
+
+                    res.status(200).json({
+                        ok: true,
+                        hospitales: hospital,
+                        total: totalHospitales
                     });
                 })
                 
@@ -77,7 +110,7 @@ app.get('/:id', (req, res) => {
             }
             res.status(200).json({
                 ok: true,
-                hospitalPorID: hospital
+                hospital: hospital
             });
         })
 })
@@ -120,7 +153,7 @@ app.put('/:id', mdlAutenticacion.verificaToken,(req,res)=>{
             }  
            res.status(200).json({
                 ok:true,
-                hospitalActualizado:hospitalGuardado
+                hospital:hospitalGuardado
             })
         })
 
@@ -191,7 +224,7 @@ app.delete('/:id',mdlAutenticacion.verificaToken,(req,res)=>{
     
         res.status(200).json({
             ok:true,
-            hospitalBorrado:hospitalBorrado
+            hospital:hospitalBorrado
         })
 
 

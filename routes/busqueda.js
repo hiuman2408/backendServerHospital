@@ -11,6 +11,9 @@ var Usuario = require('../models/usuario')
 
 app.get('/coleccion/:tabla/:busqueda', (req, res) => {
 
+    var desde = req.query.desde || 0; //parametro opcional por la URl
+        desde = Number(desde);
+
     var busqueda = req.params.busqueda;
     var tabla = req.params.tabla;
     var regex = new RegExp(busqueda, 'i');
@@ -20,15 +23,15 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
     switch (tabla) {
 
         case 'usuarios':
-            promesa = buscarUsuarios(busqueda, regex);
+            promesa = buscarUsuarios(busqueda, regex,desde);
             break;
 
         case 'medicos':
-            promesa = buscarMedicos(busqueda, regex);
+            promesa = buscarMedicos(busqueda,regex,desde);
             break;
 
         case 'hospitales':
-            promesa = buscarHospitales(busqueda, regex);
+            promesa = buscarHospitales(busqueda, regex,desde);
             break;
 
         default:
@@ -43,8 +46,10 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
     promesa.then(data => {
 
         res.status(200).json({
+            //data:data,
             ok: true,
-            [tabla]: data //[tabla ] propiedades de objetos computadas
+            [tabla]: data.usuarios, //[tabla ] propiedades de objetos computadas
+            total:data.total
         });
 
     })
@@ -101,59 +106,121 @@ app.get('/todo/:busqueda', (req, res,next) => { //parametro todo/:busqueda
  
 });
 
-function buscarHospitales(busqueda,regex){//recibe la busqueda y la expresion regular
+function buscarHospitales(busqueda,regex,desde){//recibe la busqueda y la expresion regular
 
     return new Promise((resolve, reject) => {
 
-        Hospital.find({ nombre: regex },'nombre usuario')
-            .populate('usuario', 'nombre email img')
+       
+
+        Hospital.find({nombre:regex},'nombre usuario image')
+            .skip(desde)  //desde que indice 
+            .limit(5) 
+            .populate('usuario', 'nombre email ')
             .exec((err, hospitales) => {
 
                 if (err) {
                     reject('Error al cargar hospitales', err);
                 } else {
-                    resolve(hospitales)
+
+                   
+                   Hospital.find({nombre:regex}).count({}, (err, totalHospitales) => {
+
+                            resolve({'usuarios':hospitales,'total':totalHospitales})
+                     
+                    })
+
+
+                    
                 }
             });
     });
+
+
+
 }
 
 
-function buscarMedicos(busqueda,regex){//recibe la busqueda y la expresion regular
+function buscarMedicos(busqueda,regex,desde){//recibe la busqueda y la expresion regular
 
     return new Promise((resolve, reject) => {
 
-        Medico.find({ nombre: regex },'nombre usuario hospital')
-              .populate('usuario', 'nombre email img')
+        let total;
+
+         Medico.find({ nombre: regex },'nombre usuario hospital')
+               
+              .exec((err, medicos) => {
+
+               total = medicos.length;
+            });
+
+
+
+        Medico.find({ nombre: regex },'nombre usuario hospital image')
+               .skip(desde)  //desde que indice 
+               .limit(5) 
+              .populate('usuario', 'nombre email image')
               .populate('hospital')
               .exec((err, medicos) => {
 
                 if (err) {
                     reject('Error al cargar medicos', err);
                 } else {
-                    resolve(medicos)
+
+
+                    Medico.find({nombre:regex}).count({}, (err, totalMedicos) => {
+
+                            resolve({'usuarios':medicos,'total':totalMedicos})
+                     
+                    })
+
+                    //resolve({'usuarios':medicos,'total':total})
                 }
-            });
+        });
     });
 }
 
 
-function buscarUsuarios(busqueda,regex){//recibe la busqueda y la expresion regular
+function buscarUsuarios(busqueda,regex,desde){//recibe la busqueda y la expresion regular
 
     return new Promise((resolve, reject) => {
 
+        let total;
+
+         Usuario.find({},'nombre email role image')
+              .or([{ 'nombre':regex }, { 'email':regex }])
+              
+              .exec((err, usuario) => {
+
+          
+                 total=usuario.length;
+            });
+
+
+
         Usuario.find({},'nombre email role image')
-              .or([{ 'nombre': regex }, { 'email': regex }])
+              .or([{ 'nombre':regex }, { 'email': regex }])
+              .skip(desde)  //desde que indice 
+              .limit(5) 
               .exec((err, usuarios) => {
 
                 if (err) {
                     reject('Error al cargar usuarios', err);
                 } else {
-                    resolve(usuarios)
+
+                    Usuario.find({})
+                           .or([{ 'nombre':regex }, { 'email': regex }])
+                           .count({}, (err, totalUsuarios) => {
+
+                            resolve({'usuarios':usuarios,'total':totalUsuarios})
+                     
+                    })
+                     
+                                   
                 }
             });
     });
 }
+
 
 
 

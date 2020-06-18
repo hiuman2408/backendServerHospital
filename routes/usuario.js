@@ -29,7 +29,7 @@ app.get('/', (req, res,next) => {
         desde = Number(desde);
 
 
-    Usuario.find({},'nombre email image role')
+    Usuario.find({},'nombre email image role google')
           .skip(desde)  //desde que indice 
           .limit(5)   //cuantos registros a mostrar
            .exec(
@@ -47,12 +47,13 @@ app.get('/', (req, res,next) => {
 
                     res.status(200).json({
                         ok: true,
-                        usuariosAll: usuarios,
-                        totalUsuarios: totalUsuarios
+                        usuarios: usuarios,
+                        total: totalUsuarios
                     });
             })
 
 
+        
         
         
     })
@@ -67,7 +68,7 @@ app.get('/', (req, res,next) => {
 
 //ACTUALIZAR USUARIO 
 
-app.put('/:id',mdlAutenticacion.verificaToken,(req,res)=>{
+app.put('/:id',mdlAutenticacion.verificaToken,(req,res)=>{ 
 
     var id= req.params.id;
     var body = req.body;
@@ -105,7 +106,7 @@ app.put('/:id',mdlAutenticacion.verificaToken,(req,res)=>{
             
            res.status(200).json({
                 ok:true,
-                usuario1:usuarioGuardado
+                usuario:usuarioGuardado
             })
         })
 
@@ -120,7 +121,7 @@ app.put('/:id',mdlAutenticacion.verificaToken,(req,res)=>{
 
 //CREAR USUARIO
 
-app.post('/',mdlAutenticacion.verificaToken,(req,res)=>{
+app.post('/',(req,res)=>{ //NO SE UTLIZA VERIFIACION DE TOKEN ,mdlAutenticacion.verificaToken,
 
     var body = req.body;
 

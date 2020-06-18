@@ -89,7 +89,7 @@ async function verify(token) {
                     ok: true,
                     usuario: usuarioDB,
                     token: token,
-                   // id: usuarioDB._id
+                    id: usuarioDB._id
                 });
             }
 
@@ -110,9 +110,9 @@ async function verify(token) {
 
                 res.status(200).json({
                     ok: true,
-                    usuarioNuevo: usuarioDB,
+                    usuario: usuarioDB,
                     token: token,
-                    //id: usuarioDB._id
+                    id: usuarioDB._id
                 });
 
             });
@@ -182,8 +182,8 @@ app.post('/',(req,res)=>{
 
         res.status(200).json({
             ok:true,
-            usuarioLogin:usuarioDB,
-            tokenUser:token,
+            usuario:usuarioDB,
+            token:token,
             id:usuarioDB._id
             
         });

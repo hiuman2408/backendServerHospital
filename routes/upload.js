@@ -2,6 +2,7 @@
 
 
 var express = require('express')
+
 var fileUpload = require('express-fileupload');
 
 var fs = require('fs'); //para el pathviejo 
@@ -191,7 +192,7 @@ function subirPorTipo(archivo, res) {
                     ok: true,
                     imagen:archivo,
                     mensaje: 'Imagen de usuario actualizada',
-                    usuarioActualizado: usuarioActualizado
+                    usuario: usuarioActualizado
                 });
 
             })
@@ -243,7 +244,7 @@ function subirPorTipo(archivo, res) {
                     ok: true,
                     imagen:archivo,
                     mensaje: 'Imagen de Medico actualizada',
-                    medicoActualizado: medicoActualizado
+                    medico: medicoActualizado
                 });
 
 
@@ -298,7 +299,7 @@ function subirPorTipo(archivo, res) {
                     ok: true,
                     imagen:archivo,
                     mensaje: 'Imagen de Hospital actualizada',
-                    hospitalActualizado: hospitalActualizado
+                    hospital: hospitalActualizado
                 });
 
 

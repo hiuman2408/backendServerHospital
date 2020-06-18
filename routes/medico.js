@@ -37,10 +37,10 @@ app.get('/', (req, res,next) => {
 
                 res.status(200).json({
                     ok: true,
-                    medicosAll: medico,
-                    totalMedicos: totalMedicos
+                    medicos: medico,
+                    total: totalMedicos
                 });
-            })
+            });
             
         });
 
@@ -125,7 +125,7 @@ app.put('/:id', mdlAutenticacion.verificaToken,(req,res)=>{
 
            res.status(200).json({
                 ok:true,
-                medicoActualizado:medicoGuardado
+                medico:medicoGuardado
             })
         })
 
@@ -161,7 +161,7 @@ app.post('/', mdlAutenticacion.verificaToken, (req, res) => {
 
         res.status(201).json({
             ok: true,
-            medicoCreado: medicoGuardado
+            medico: medicoGuardado
         });
 
 
@@ -197,7 +197,7 @@ app.delete('/:id',mdlAutenticacion.verificaToken,(req,res)=>{
         
         res.status(200).json({
             ok:true,
-            medicoBorrado:medicoBorrado
+            medico:medicoBorrado
         })
 
 
